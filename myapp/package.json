@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "express": "3.4.4",
-    "jade": "*"
+    "jade": "*",
+    "orm": "2.*",
+    "sqlite3": "*"
   }
 }

@@ -8,7 +8,9 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var models = require('./models');
 
+var orm = require('orm');
 var app = express();
 
 // all environments
@@ -22,6 +24,9 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
+
+models.define(app);
+
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
