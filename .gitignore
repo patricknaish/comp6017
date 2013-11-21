@@ -1,0 +1,5 @@
+*~
+myapp/node_modules
+.vagrant
+*.db
+*.log
