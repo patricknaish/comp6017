@@ -9,6 +9,7 @@
     "express": "3.4.4",
     "jade": "*",
     "orm": "*",
-    "sqlite3": "*"
+    "sqlite3": "*",
+    "db-migrate": "*"  
   }
 }
