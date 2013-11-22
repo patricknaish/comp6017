@@ -60,7 +60,18 @@ question_comment = {
 };
 
 question_listing = {
-    "get": function(req, res) {},
+    "get": function(req, res) {
+        questions = req.models.question.find({}, function(err, questions) {
+            if(!err) {
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(questions));
+            } else {
+                res.setHeader('Content-Type', 'text/plain');
+                res.end("Error" + err);//TODO proper error
+            }
+        });
+        
+    },
     "head": function(req, res) {}
 };
 
