@@ -55,8 +55,8 @@ exports.define = function(app) {
 			models.question_comment.hasOne("author", models.user);
 			models.answer_comment.hasOne("author", models.user);
 
-			models.question_comment.hasOne("question", models.question);
 			models.question_answer.hasOne("question", models.question);
+			models.question_comment.hasOne("question", models.question);
 			models.answer_comment.hasOne("answer", models.question_answer);
 
 			next();
