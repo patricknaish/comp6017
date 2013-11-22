@@ -4,19 +4,50 @@ exports.define = function(app) {
 	app.use(orm.express("sqlite://database.db", {
 	    define: function (db, models, next) {
 			models.question = db.define("question", {
-				question: String
+				question: {
+					type: "text",
+					required: true
+				},
+				timestamp: {
+					type: "date",
+					required: true
+				}
 			});
 			models.question_answer = db.define("answer", {
-				answer: String
+				answer: {
+					type: "text", 
+					required: true
+				},
+				timestamp: {
+					type: "date",
+					required: true
+				}
 			});
 			models.question_comment = db.define("question_comment", {
-				comment: String
+				comment: {
+					type: "text",
+					required: true
+				},
+				timestamp: {
+					type: "date",
+					required: true
+				}
 			});
 			models.answer_comment = db.define("answer_comment", {
-				comment: String
+				comment: {
+					type: "text",
+					required: true
+				},
+				timestamp: {
+					type: "date",
+					required: true
+				}
 			});
 			models.user = db.define("user", {
-				name: String
+				name: {
+					type: "text", 
+					required: true
+				}
 			});
 
 			models.question.hasOne("author", models.user);
