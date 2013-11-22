@@ -6,7 +6,7 @@ exports.up = function(db, callback) {
 
 	function createOwners(err) {
 		if (err) { callback(err); return; }
-		db.runSql("CREATE TABLE answer_comment ( id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, comment TEXT, author INTEGER, answer INTEGER, FOREIGN KEY (author) REFERENCES user(id), FOREIGN KEY (answer) REFERENCES answer(id) );", callback);
+		db.runSql("CREATE TABLE answer_comment ( id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, comment TEXT, author_id INTEGER, answer_id INTEGER, FOREIGN KEY (author_id) REFERENCES user(id), FOREIGN KEY (answer_id) REFERENCES answer(id) );", callback);
 	}
 };
 
