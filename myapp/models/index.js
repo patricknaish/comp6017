@@ -4,13 +4,21 @@ exports.define = function(app) {
 	app.use(orm.express("sqlite://database.db", {
 	    define: function (db, models, next) {
 			models.question = db.define("question", {
+				title: {
+					type: "text",
+					required: true
+				},
 				question: {
 					type: "text",
 					required: true
 				},
-				timestamp: {
+				created: {
 					type: "date",
 					required: true
+				},
+				updated: {
+					type: "date",
+					required: false
 				}
 			});
 			models.question_answer = db.define("answer", {
@@ -18,9 +26,13 @@ exports.define = function(app) {
 					type: "text", 
 					required: true
 				},
-				timestamp: {
+				created: {
 					type: "date",
 					required: true
+				},
+				updated: {
+					type: "date",
+					required: false
 				}
 			});
 			models.question_comment = db.define("question_comment", {
@@ -28,9 +40,13 @@ exports.define = function(app) {
 					type: "text",
 					required: true
 				},
-				timestamp: {
+				created: {
 					type: "date",
 					required: true
+				},
+				updated: {
+					type: "date",
+					required: false
 				}
 			});
 			models.answer_comment = db.define("answer_comment", {
@@ -38,9 +54,13 @@ exports.define = function(app) {
 					type: "text",
 					required: true
 				},
-				timestamp: {
+				created: {
 					type: "date",
 					required: true
+				},
+				updated: {
+					type: "date",
+					required: false
 				}
 			});
 			models.user = db.define("user", {
