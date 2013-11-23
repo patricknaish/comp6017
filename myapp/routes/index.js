@@ -63,16 +63,27 @@ question_listing = {
     "get": function(req, res) {
         questions = req.models.question.find({}, function(err, questions) {
             if(!err) {
+                var body = JSON.stringify(questions);
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(questions));
+                res.setHeader('Content-Length', body.length);
+                res.statusCode = 200;
+                res.end(body);
             } else {
-                res.setHeader('Content-Type', 'text/plain');
-                res.end("Error" + err);//TODO proper error
+                var error = JSON.stringify({
+                    "error": err
+                });
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Content-Length', error.length);
+                res.statusCode = 500;
+                res.end(error);
             }
-        });
-        
+        });  
     },
-    "head": function(req, res) {}
+    "head": function(req, res) {
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Length', 0);
+        res.end();
+    }
 };
 
 exports.question = {
