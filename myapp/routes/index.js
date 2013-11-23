@@ -5,14 +5,15 @@
 
 exports.index = {
     "get": function(req, res) {
-        var body = JSON.stringify(exports.question);
-        res.setHeader('Content-Type', 'text/plain');
+        var body = JSON.stringify(exports);
+        res.setHeader('Content-Type', 'application/json');
         res.setHeader('Content-Length', body.length);
         res.end(body);
     },
     "head": function(req, res) {
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Content-Length', body.length);
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Length', 0);
+        res.end();
     }
 };
 
