@@ -187,19 +187,10 @@ question_listing = {
                 for (var i = 0; i < questions.length; i++) {
                     body.push(questions[i].render());
                 }
-                body = JSON.stringify(body);
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', body.length);
-                res.statusCode = 200;
-                res.end(body);
+                res.json(body);
             } else {
-                var error = JSON.stringify({
-                    "error": err
-                });
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', error.length);
                 res.statusCode = 500;
-                res.end(error);
+                res.json({"error": err});
             }
         });
     },
@@ -228,7 +219,7 @@ exports.question = {
                 res.json(items[0].render());
             } else {
                 res.statusCode = 500;
-                res.json("error": err);
+                res.json({"error": err});
             }
         });
     },
@@ -251,7 +242,7 @@ exports.question = {
                 });
             } else {
                 res.statusCode = 404;
-                res.end({"error": "No question found with id "+req.params.qid});
+                res.json({"error": "No question found with id "+req.params.qid});
             }
         });
     },
@@ -263,12 +254,12 @@ exports.question = {
                         res.json({removed: question.render()});
                     } else {
                         res.statusCode = 500;
-                        res.json("error": err);
+                        res.json({"error": err});
                     }
                 });
             } else {
                 res.statusCode = 404;
-                res.json("error": "No question found with id "+req.params.qid);
+                res.json({"error": "No question found with id "+req.params.qid});
             }
         });
     },
