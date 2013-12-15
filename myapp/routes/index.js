@@ -5,16 +5,8 @@
 
 exports.index = {
     "get": function(req, res) {
-        var body = JSON.stringify(exports);
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Length', body.length);
-        res.end(body);
+        res.json(exports);
     },
-    "head": function(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Length', 0);
-        res.end();
-    }
 };
 
 answer_listing = {
@@ -39,12 +31,10 @@ answer_listing = {
 
 answer_comment_listing = {
     "get": function(req, res) {},
-    "head": function(req, res) {}
 };
 
 answer_comment = {
     "get": function(req, res) {},
-    "head": function(req, res) {},
     "post": function(req, res) {},
     "put": function(req, res) {},
     "delete": function(req, res) {},
@@ -213,38 +203,18 @@ question_listing = {
             }
         });
     },
-    "head": function(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Length', 0);
-        res.end();
-    }
 };
 
 exports.question = {
     "get": function(req, res) {
         req.models.question.get(req.params.qid, function(err, question) {
             if (!err) {
-                var body = question.render();
-                body = JSON.stringify(body);
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', body.length);
-                res.statusCode = 200;
-                res.end(body);
+                res.json(question.render());                
             } else {
-                var error = JSON.stringify({
-                    "error": "No question found with id "+req.params.qid
-                });
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', error.length);
                 res.statusCode = 404;
-                res.end(error);
+                res.json({"error": "No question found with id "+req.params.qid});
             }
         });
-    },
-    "head": function(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Length', 0);
-        res.end();
     },
     "post": function(req, res) {
         req.models.question.create([{
@@ -254,22 +224,11 @@ exports.question = {
             created: new Date()
         }], function(err, items) {
             if(!err) {
-                var body = {
-                    created: items[0].render()
-                };
-                body = JSON.stringify(body);
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', body.length);
                 res.statusCode = 201;
-                res.end(body);
+                res.json(body);
             } else {
-                var error = JSON.stringify({
-                    "error": err
-                });
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', error.length);
                 res.statusCode = 500;
-                res.end(error);
+                res.json("error": err);
             }
         });
     },
@@ -284,29 +243,15 @@ exports.question = {
                         var body = {
                             updated: question.render()
                         };
-                        body = JSON.stringify(body);
-                        res.setHeader('Content-Type', 'application/json');
-                        res.setHeader('Content-Length', body.length);
-                        res.statusCode = 200;
-                        res.end(body);
+                        res.json(body);
                     } else {
-                        var error = JSON.stringify({
-                            "error": err
-                        });
-                        res.setHeader('Content-Type', 'application/json');
-                        res.setHeader('Content-Length', error.length);
                         res.statusCode = 500;
-                        res.end(error);
+                        res.json({"error": err});
                     }
                 });
             } else {
-                var error = JSON.stringify({
-                    "error": "No question found with id "+req.params.qid
-                });
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', error.length);
                 res.statusCode = 404;
-                res.end(error);
+                res.end({"error": "No question found with id "+req.params.qid});
             }
         });
     },
@@ -315,32 +260,15 @@ exports.question = {
             if (!err) {
                 question.remove(function(err) {
                     if (!err) {
-                        var body = {
-                            removed: question.render()
-                        };
-                        body = JSON.stringify(body);
-                        res.setHeader('Content-Type', 'application/json');
-                        res.setHeader('Content-Length', body.length);
-                        res.statusCode = 200;
-                        res.end(body);
+                        res.json({removed: question.render()});
                     } else {
-                        var error = JSON.stringify({
-                            "error": err
-                        });
-                        res.setHeader('Content-Type', 'application/json');
-                        res.setHeader('Content-Length', error.length);
                         res.statusCode = 500;
-                        res.end(error);
+                        res.json("error": err);
                     }
                 });
             } else {
-                var error = JSON.stringify({
-                    "error": "No question found with id "+req.params.qid
-                });
-                res.setHeader('Content-Type', 'application/json');
-                res.setHeader('Content-Length', error.length);
                 res.statusCode = 404;
-                res.end(error);
+                res.json("error": "No question found with id "+req.params.qid);
             }
         });
     },
