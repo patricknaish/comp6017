@@ -11,19 +11,17 @@ exports.index = {
 
 var answer_listing = {
     "get": function (req, res) {
-        req.models.question_answer.find({question_id: req.params.qid}, function (err, question) {
+        req.models.question_answer.find({question_id: req.params.qid}, function (err, answers) {
             if (!err) {
-                var body = JSON.stringify(question);
-                res.setHeader('Content-Type', 'application/json');
-                res.statusCode = 200;
-                res.send(body);
+                var body = [];
+                var i;
+                for (i = 0; i < answers.length; i++) {
+                    body.push(answers[i].render());
+                }
+                res.json(body);
             } else {
-                var error = JSON.stringify({
-                    "error": "No question found with id " + req.params.qid
-                });
-                res.setHeader('Content-Type', 'application.json');
                 res.statusCode = 404;
-                res.end(error);
+                res.json({"error": "No question found for " + req.params.qid});
             }
         });
     }
@@ -44,32 +42,36 @@ var answer_comment = {
 var question_answer = {
     "get": function (req, res) {
         req.models.question_answer.get(req.params.aid, function (err, answer) {
-            if (!err) {
-                res.json(answer);
-            } else {
-                res.json({"error": "No answer found for " + req.params.aid});
+            if (err) {
                 res.statusCode = 404;
+                res.json({"error": "No answer found for " + req.params.aid});
+                return;
             }
+            res.json(answer.render());
         });
     },
     "post": function (req, res) {
-        req.models.question_answer.create([{
-            answer : req.body.answer,
-            author_id: req.body.author_id,
-            question_id: req.params.qid,
-            created: new Date()
-        }], function (err, items) {
+        req.models.question_answer.create([
+            {
+                "answer" : req.body.answer,
+                "author_id": req.body.author_id,
+                "question_id": req.params.qid,
+                "created": new Date()
+            }
+        ], function (err, items) {
             if (err) {
-                res.json(err);
+                res.statusCode = 500;
+                res.json({"error": err});
                 return;
             }
-
-            res.json(items[0]);
+            res.statusCode = 201;
+            res.json(items[0].render());
         });
     },
     "put": function (req, res) {
         req.models.question_answer.get(req.params.aid, function (err, answer) {
             if (err) {
+                res.statusCode = 404;
                 res.json({"error": "No answer found for " + req.params.aid});
                 return;
             }
@@ -78,22 +80,24 @@ var question_answer = {
             answer.updated = new Date();
             answer.save(function (err) {
                 if (err) {
+                    res.statusCode = 500;
                     res.json({"error": err});
                     return;
                 }
-
-                res.json(answer);
+                res.json(answer.render());
             });
         });
     },
     "delete": function (req, res) {
         req.models.question_answer.get(req.params.aid, function (err, answer) {
             if (err) {
-                res.json({"error": err});
+                res.statusCode = 404;
+                res.json({"error": "No answer found for " + req.params.aid});
                 return;
             }
             answer.remove(function (err) {
                 if (err) {
+                    res.statusCode = 500;
                     res.json({"error": err});
                     return;
                 }
@@ -137,12 +141,14 @@ var question_comment = {
                 "created": new Date(),
                 "question_id": req.params.qid
             }
-        ], function (err, comment) {
+        ], function (err, items) {
             if (err) {
+                res.statusCode = 500;
                 res.json({"error": err});
                 return;
             }
-            res.json(comment);
+            res.statusCode = 201;
+            res.json(items[0].render());
         });
     },
     "put": function (req, res) {
@@ -158,7 +164,7 @@ var question_comment = {
                     res.json({"error": err});
                     return;
                 }
-                res.json(comment);
+                res.json(comment.render());
             });
         });
     },
@@ -201,68 +207,67 @@ var question_listing = {
 exports.question = {
     "get": function (req, res) {
         req.models.question.get(req.params.qid, function (err, question) {
-            if (!err) {
-                res.json(question.render());
-            } else {
+            if (err) {
                 res.statusCode = 404;
-                res.json({"error": "No question found with id " + req.params.qid});
+                res.json({"error": "No question found for " + req.params.qid});
+                return;
             }
+            res.json(question.render());
         });
     },
     "post": function (req, res) {
-        req.models.question.create([{
-            title: req.body.title,
-            question: req.body.question,
-            author_id: req.body.author_id,
-            created: new Date()
-        }], function (err, items) {
-            if (!err) {
-                res.statusCode = 201;
-                res.json(items[0].render());
-            } else {
+        req.models.question.create([
+            {
+                "title": req.body.title,
+                "question": req.body.question,
+                "author_id": req.body.author_id,
+                "created": new Date()
+            }
+        ], function (err, items) {
+            if (err) {
                 res.statusCode = 500;
                 res.json({"error": err});
+                return;
             }
+            res.statusCode = 201;
+            res.json(items[0].render());
         });
     },
     "put": function (req, res) {
         req.models.question.get(req.params.qid, function (err, question) {
-            if (!err) {
-                question.question = req.body.question;
-                question.title = req.body.title;
-                question.updated = new Date();
-                question.save(function (err) {
-                    if (!err) {
-                        var body = {
-                            updated: question.render()
-                        };
-                        res.json(body);
-                    } else {
-                        res.statusCode = 500;
-                        res.json({"error": err});
-                    }
-                });
-            } else {
+            if (err) {
                 res.statusCode = 404;
-                res.json({"error": "No question found with id " + req.params.qid});
+                res.json4({"error": "No question found for " + req.params.qid});
+                return;
             }
+            if (req.body.question) { question.question = req.body.question; }
+            if (req.body.title) { question.title = req.body.title; }
+            question.updated = new Date();
+            question.save(function (err) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.json({"error": err});
+                    return;
+                }
+                res.json(question.render());
+            });
         });
     },
     "delete": function (req, res) {
         req.models.question.get(req.params.qid, function (err, question) {
-            if (!err) {
-                question.remove(function (err) {
-                    if (!err) {
-                        res.json({removed: question.render()});
-                    } else {
-                        res.statusCode = 500;
-                        res.json({"error": err});
-                    }
-                });
-            } else {
+            if (err) {
                 res.statusCode = 404;
-                res.json({"error": "No question found with id " + req.params.qid});
+                res.json({"error": "No question found for " + req.params.qid});
+                return;
             }
+            question.remove(function (err) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.json({"error": err});
+                    return;
+                }
+                res.json({"status": "removed"});
+            });
         });
     },
     "listing": question_listing,

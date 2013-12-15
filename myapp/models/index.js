@@ -55,6 +55,24 @@ exports.define = function (app) {
                 author_id: {
                     type: "number",
                     required: true
+                },
+                question_id: {
+                    type: "number",
+                    required: true
+                }
+            }, {
+                methods: {
+                    render: function () {
+                        return {
+                            id: this.id,
+                            answer: this.answer,
+                            created: this.created,
+                            updated: this.updated,
+                            author: this.author_id,
+                            question: this.question_id,
+                            href: "/question/" + this.question_id + "/answer/" + this.id
+                        };
+                    }
                 }
             });
             models.question_comment = db.define("question_comment", {
@@ -73,6 +91,24 @@ exports.define = function (app) {
                 author_id: {
                     type: "number",
                     required: true
+                },
+                question_id: {
+                    type: "number",
+                    required: true
+                }
+            }, {
+                methods: {
+                    render: function () {
+                        return {
+                            id: this.id,
+                            comment: this.comment,
+                            created: this.created,
+                            updated: this.updated,
+                            author: this.author_id,
+                            question: this.question_id,
+                            href: "/question/" + this.question_id + "/comment/" + this.id
+                        };
+                    }
                 }
             });
             models.answer_comment = db.define("answer_comment", {
@@ -91,12 +127,45 @@ exports.define = function (app) {
                 author_id: {
                     type: "number",
                     required: true
+                },
+                answer_id: {
+                    type: "number",
+                    required: true
+                }
+            }, {
+                methods: {
+                    render: function () {
+                        var question_id;
+                        models.question_answer.get(this.answer_id, function (err, answer) {
+                            if (!err) {
+                                question_id = answer.question_id;
+                            }
+                        });
+                        return {
+                            id: this.id,
+                            comment: this.comment,
+                            created: this.created,
+                            updated: this.updated,
+                            author: this.author_id,
+                            answer: this.answer_id,
+                            href: "/question/" + question_id + "/answer/" + this.answer_id + "/comment/" + this.id
+                        };
+                    }
                 }
             });
             models.user = db.define("user", {
                 name: {
                     type: "text",
                     required: true
+                }
+            }, {
+                methods: {
+                    render: function () {
+                        return {
+                            id: this.id,
+                            name: this.name
+                        };
+                    }
                 }
             });
 
