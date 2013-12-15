@@ -363,3 +363,87 @@ exports.question = {
     "answer": question_answer,
     "comment": question_comment
 };
+
+var user_listing = {
+    "get": function (req, res) {
+        req.models.user.find({}, function (err, users) {
+            if (err) {
+                res.statusCode = 404;
+                res.json({"error": err});
+                return;
+            }
+            var body = [];
+            var i;
+            for (i = 0; i < users.length; i++) {
+                body.push(users[i].render());
+            }
+            res.json(body);
+        });
+    }
+};
+
+exports.user = {
+    "get": function (req, res) {
+        req.models.user.get(req.params.uid, function (err, user) {
+            if (err) {
+                res.statusCode = 404;
+                res.json({"error": "No user found for " + req.params.uid});
+                return;
+            }
+            res.json(user.render());
+        });
+    },
+    "post": function (req, res) {
+        req.models.user.create([
+            {
+                "name": req.body.name,
+                "created": new Date()
+            }
+        ], function (err, items) {
+            if (err) {
+                res.statusCode = 500;
+                res.json({"error": err});
+                return;
+            }
+            res.statusCode = 201;
+            res.json(items[0].render());
+        });
+    },
+    "put": function (req, res) {
+        req.models.user.get(req.params.uid, function (err, user) {
+            if (err) {
+                res.statusCode = 404;
+                res.json({"error": "No user found for " + req.params.qid});
+                return;
+            }
+            if (req.body.name) { user.name = req.body.name; }
+            user.updated = new Date();
+            user.save(function (err) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.json({"error": err});
+                    return;
+                }
+                res.json(user.render());
+            });
+        });
+    },
+    "delete": function (req, res) {
+        req.models.user.get(req.params.uid, function (err, user) {
+            if (err) {
+                res.statusCode = 404;
+                res.json({"error": "No user found for " + req.params.uid});
+                return;
+            }
+            user.remove(function (err) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.json({"error": err});
+                    return;
+                }
+                res.json({"status": "removed"});
+            });
+        });
+    },
+    "listing": user_listing
+};

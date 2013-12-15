@@ -154,13 +154,24 @@ exports.define = function (app) {
                 name: {
                     type: "text",
                     required: true
+                },
+                created: {
+                    type: "date",
+                    required: true
+                },
+                updated: {
+                    type: "date",
+                    required: false
                 }
             }, {
                 methods: {
                     render: function () {
                         return {
                             id: this.id,
-                            name: this.name
+                            name: this.name,
+                            created: this.created,
+                            updated: this.updated,
+                            href: "/user/" + this.id
                         };
                     }
                 }

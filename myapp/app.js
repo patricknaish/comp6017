@@ -38,6 +38,8 @@ if ('development' === app.get('env')) {
 
 
 app.get("/", routes.index.get);
+app.get("/user", routes.user.listing.get);
+app.get("/user/:uid", routes.user.get);
 app.get("/question", routes.question.listing.get);
 app.get("/question/:qid", routes.question.get);
 app.get("/question/:qid/answer", routes.question.answer.listing.get);
@@ -47,16 +49,19 @@ app.get("/question/:qid/answer/:aid/comment", routes.question.answer.comment.lis
 app.get("/question/:qid/comment", routes.question.comment.listing.get);
 app.get("/question/:qid/comment/:cid", routes.question.comment.get);
 
+app.post("/user", routes.user.post);
 app.post("/question", routes.question.post);
 app.post("/question/:qid/answer", routes.question.answer.post);
 app.post("/question/:qid/answer/:aid/comment", routes.question.answer.comment.post);
 app.post("/question/:qid/comment", routes.question.comment.post);
 
+app.put("/user/:uid", routes.user.put);
 app.put("/question/:qid", routes.question.put);
 app.put("/question/:qid/answer/:aid", routes.question.answer.put);
 app.put("/question/:qid/answer/:aid/comment/:cid", routes.question.answer.comment.put);
 app.put("/question/:qid/comment/:cid", routes.question.comment.put);
 
+app.delete("/user/:uid", routes.user.delete);
 app.delete("/question/:qid", routes.question.delete);
 app.delete("/question/:qid/answer/:aid", routes.question.answer.delete);
 app.delete("/question/:qid/answer/:aid/comment/:cid", routes.question.answer.comment.delete);
