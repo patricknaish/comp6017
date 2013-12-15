@@ -18,7 +18,26 @@ exports.define = function(app) {
 				},
 				updated: {
 					type: "date",
-					required: false
+					required: false 
+				}, 
+				author_id: {
+					type: "number",
+					required: true
+				}
+			},
+			{
+				methods: {
+					render: function() {
+						return {
+							id: this.id,
+							title: this.title,
+							question: this.question,
+							created: this.created,
+							updated: this.updated,
+							author: this.author_id,
+							href: "/question/"+this.id
+						};
+					}
 				}
 			});
 			models.question_answer = db.define("answer", {
@@ -33,6 +52,10 @@ exports.define = function(app) {
 				updated: {
 					type: "date",
 					required: false
+				},
+				author_id: {
+					type: "number",
+					required: true
 				}
 			});
 			models.question_comment = db.define("question_comment", {
@@ -47,6 +70,10 @@ exports.define = function(app) {
 				updated: {
 					type: "date",
 					required: false
+				},
+				author_id: {
+					type: "number",
+					required: true
 				}
 			});
 			models.answer_comment = db.define("answer_comment", {
@@ -61,6 +88,10 @@ exports.define = function(app) {
 				updated: {
 					type: "date",
 					required: false
+				},
+				author_id: {
+					type: "number",
+					required: true
 				}
 			});
 			models.user = db.define("user", {
