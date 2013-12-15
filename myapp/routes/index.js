@@ -95,7 +95,7 @@ exports.question = {
     "get": function(req, res) {
         req.models.question.get(req.params.qid, function(err, question) {
             if (!err) {
-                var body = question[0].render();
+                var body = question.render();
                 body = JSON.stringify(body);
                 res.setHeader('Content-Type', 'application/json');
                 res.setHeader('Content-Length', body.length);
