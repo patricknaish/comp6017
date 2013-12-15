@@ -62,9 +62,55 @@ question_answer = {
             }
         });
     },
-    "post": function(req, res) {},
-    "put": function(req, res) {},
-    "delete": function(req, res) {},
+    "post": function(req, res) {
+        req.models.question_answer.create([{
+            answer : req.body.answer,
+            author_id: req.body.author_id,
+            question_id: req.params.qid,
+            created: new Date()
+        }], function(err, items) {
+            if(err) {
+                res.json(err);
+                return;
+            }
+
+            res.json(items[0]);
+        });
+    },
+    "put": function(req, res) {
+        req.models.question_answer.get(req.params.aid, function(err, answer) {
+            if(err) {
+                res.json({"error": "No answer found for "+req.params.aid});
+                return;
+            }
+            if(req.body.answer) { answer.answer = req.body.answer; }
+            if(req.body.author_id) { answer.author_id = req.body.author_id; }
+            answer.updated = new Date();
+            answer.save(function(err) {
+                if(err) {
+                    res.json({"error": err});
+                    return;
+                }
+                
+                res.json(answer);
+            });
+        });
+    },
+    "delete": function(req, res) {
+        req.models.question_answer.get(req.params.aid, function(err, answer) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            answer.remove(function(err) {
+                if(err) {
+                    res.json({"error": err});
+                    return;
+                }
+                res.json({"status": "removed"});//todo do this right
+            })
+        });
+    },
     "listing": answer_listing,
     "comment": answer_comment
 };
