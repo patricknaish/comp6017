@@ -225,7 +225,7 @@ exports.question = {
         }], function(err, items) {
             if(!err) {
                 res.statusCode = 201;
-                res.json(body);
+                res.json(items[0].render());
             } else {
                 res.statusCode = 500;
                 res.json("error": err);
