@@ -12,30 +12,101 @@ exports.index = {
 var answer_listing = {
     "get": function (req, res) {
         req.models.question_answer.find({question_id: req.params.qid}, function (err, answers) {
-            if (!err) {
-                var body = [];
-                var i;
-                for (i = 0; i < answers.length; i++) {
-                    body.push(answers[i].render());
-                }
-                res.json(body);
-            } else {
+            if (err) {
                 res.statusCode = 404;
                 res.json({"error": "No question found for " + req.params.qid});
+                return;
             }
+            var body = [];
+            var i;
+            for (i = 0; i < answers.length; i++) {
+                body.push(answers[i].render());
+            }
+            res.json(body);
         });
     }
 };
 
 var answer_comment_listing = {
-    "get": function (req, res) {}
+    "get": function (req, res) {
+        req.models.answer_comment.find({
+            "answer_id": req.params.aid
+        }, function (err, comments) {
+            if (err) {
+                res.statusCode = 404;
+                res.json({"error": err});
+                return;
+            }
+            var body = [];
+            var i;
+            for (i = 0; i < comments.length; i++) {
+                body.push(comments[i].render());
+            }
+            res.json(body);
+        });
+    }
 };
 
 var answer_comment = {
-    "get": function (req, res) {},
-    "post": function (req, res) {},
-    "put": function (req, res) {},
-    "delete": function (req, res) {},
+    "get": function (req, res) {
+        req.models.answer_comment.get(req.params.cid, function (err, comment) {
+            if (err) {
+                res.json({"error": err});
+                return;
+            }
+            res.json(comment.render());
+        });
+    },
+    "post": function (req, res) {
+        req.models.answer_comment.create([
+            {
+                "comment": req.body.comment,
+                "author_id": req.body.author_id,
+                "created": new Date(),
+                "answer_id": req.params.aid
+            }
+        ], function (err, items) {
+            if (err) {
+                res.statusCode = 500;
+                res.json({"error": err});
+                return;
+            }
+            res.statusCode = 201;
+            res.json(items[0].render());
+        });
+    },
+    "put": function (req, res) {
+        req.models.answer_comment.get(req.params.cid, function (err, comment) {
+            if (err) {
+                res.json({"error": err});
+                return;
+            }
+            if (req.body.comment) { comment.comment = req.body.comment; }
+            comment.updated = new Date();
+            comment.save(function (err) {
+                if (err) {
+                    res.json({"error": err});
+                    return;
+                }
+                res.json(comment.render());
+            });
+        });
+    },
+    "delete": function (req, res) {
+        req.models.answer_comment.get(req.params.cid, function (err, comment) {
+            if (err) {
+                res.json({"error": err});
+                return;
+            }
+            comment.remove(function (err) {
+                if (err) {
+                    res.json({"error": err});
+                    return;
+                }
+                res.json({"status": "removed"});
+            });
+        });
+    },
     "listing": answer_comment_listing
 };
 
@@ -115,10 +186,16 @@ var question_comment_listing = {
             "question_id": req.params.qid
         }, function (err, comments) {
             if (err) {
+                res.statusCode = 404;
                 res.json({"error": err});
                 return;
             }
-            res.json(comments);
+            var body = [];
+            var i;
+            for (i = 0; i < comments.length; i++) {
+                body.push(comments[i].render());
+            }
+            res.json(body);
         });
     }
 };
@@ -130,7 +207,7 @@ var question_comment = {
                 res.json({"error": err});
                 return;
             }
-            res.json(comment);
+            res.json(comment.render());
         });
     },
     "post": function (req, res) {
@@ -189,17 +266,17 @@ var question_comment = {
 var question_listing = {
     "get": function (req, res) {
         req.models.question.find({}, function (err, questions) {
-            if (!err) {
-                var body = [];
-                var i;
-                for (i = 0; i < questions.length; i++) {
-                    body.push(questions[i].render());
-                }
-                res.json(body);
-            } else {
-                res.statusCode = 500;
+            if (err) {
+                res.statusCode = 404;
                 res.json({"error": err});
+                return;
             }
+            var body = [];
+            var i;
+            for (i = 0; i < questions.length; i++) {
+                body.push(questions[i].render());
+            }
+            res.json(body);
         });
     }
 };

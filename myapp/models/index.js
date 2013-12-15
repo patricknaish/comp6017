@@ -135,12 +135,6 @@ exports.define = function (app) {
             }, {
                 methods: {
                     render: function () {
-                        var question_id;
-                        models.question_answer.get(this.answer_id, function (err, answer) {
-                            if (!err) {
-                                question_id = answer.question_id;
-                            }
-                        });
                         return {
                             id: this.id,
                             comment: this.comment,
@@ -148,7 +142,7 @@ exports.define = function (app) {
                             updated: this.updated,
                             author: this.author_id,
                             answer: this.answer_id,
-                            href: "/question/" + question_id + "/answer/" + this.answer_id + "/comment/" + this.id
+                            href: "/answer/" + this.answer_id + "/comment/" + this.id
                         };
                     }
                 }
