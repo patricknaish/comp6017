@@ -52,7 +52,16 @@ answer_comment = {
 };
 
 question_answer = {
-    "get": function(req, res) {},
+    "get": function(req, res) {
+        req.models.question_answer.get(req.params.aid, function(err, answer) {
+            if(!err) {
+                res.json(answer);
+            } else {
+                res.json({"error": "No answer found for "+req.params.aid});
+                res.statusCode = 404;
+            }
+        });
+    },
     "post": function(req, res) {},
     "put": function(req, res) {},
     "delete": function(req, res) {},
