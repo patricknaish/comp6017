@@ -5,7 +5,7 @@
  */
 exports.index = {
     "get": function (req, res) {
-        res.json(exports);
+        res.json({"questions": "/questions"});
     }
 };
 
@@ -51,6 +51,7 @@ var answer_comment = {
     "get": function (req, res) {
         req.models.answer_comment.get(req.params.cid, function (err, comment) {
             if (err) {
+                res.statusCode = 404;
                 res.json({"error": err});
                 return;
             }
@@ -71,8 +72,19 @@ var answer_comment = {
                 res.json({"error": err});
                 return;
             }
-            res.statusCode = 201;
-            res.json(items[0].render());
+            /* Workaround for creation autofetch failure, to allow for correct rendering of URL */
+            req.models.answer_comment.get(items[0].id, function (err, comment) {
+                if (err) {
+                    res.statusCode = 404;
+                    res.json({"error": err});
+                    return;
+                }
+                res.statusCode = 201;
+                res.json(comment.render());
+            });
+            /* This will work correctly if bug is fixed */
+            // res.statusCode = 201;
+            // res.json(items[0].render());
         });
     },
     "put": function (req, res) {

@@ -34,7 +34,9 @@ exports.define = function (app) {
                             created: this.created,
                             updated: this.updated,
                             author: this.author_id,
-                            href: "/question/" + this.id
+                            href: "/question/" + this.id,
+                            comments: "/question/" + this.id + "/comment",
+                            answers: "/question/" + this.id + "/answer"
                         };
                     }
                 }
@@ -69,8 +71,9 @@ exports.define = function (app) {
                             created: this.created,
                             updated: this.updated,
                             author: this.author_id,
-                            question: this.question_id,
-                            href: "/question/" + this.question_id + "/answer/" + this.id
+                            question: "/question/" + this.question_id,
+                            href: "/question/" + this.question_id + "/answer/" + this.id,
+                            comments: "/question/" + this.question_id + "/answer/" + this.id + "/comment"
                         };
                     }
                 }
@@ -105,7 +108,7 @@ exports.define = function (app) {
                             created: this.created,
                             updated: this.updated,
                             author: this.author_id,
-                            question: this.question_id,
+                            question: "/question/" + this.question_id,
                             href: "/question/" + this.question_id + "/comment/" + this.id
                         };
                     }
@@ -141,8 +144,8 @@ exports.define = function (app) {
                             created: this.created,
                             updated: this.updated,
                             author: this.author_id,
-                            answer: this.answer_id,
-                            href: "/answer/" + this.answer_id + "/comment/" + this.id
+                            answer: "/question/" + this.answer.question_id + "/answer/" + this.answer_id,
+                            href: "/question/" + this.answer.question_id + "/answer/" + this.answer_id + "/comment/" + this.id
                         };
                     }
                 }
@@ -163,14 +166,42 @@ exports.define = function (app) {
                 }
             });
 
-            models.question.hasOne("author", models.user);
-            models.question_answer.hasOne("author", models.user);
-            models.question_comment.hasOne("author", models.user);
-            models.answer_comment.hasOne("author", models.user);
+            models.question.hasOne("author", models.user, {
+                reverse: "questions",
+                required: true,
+                autoFetch: true
+            });
+            models.question_answer.hasOne("author", models.user, {
+                reverse: "answers",
+                required: true,
+                autoFetch: true
+            });
+            models.question_comment.hasOne("author", models.user, {
+                reverse: "questionComments",
+                required: true,
+                autoFetch: true
+            });
+            models.answer_comment.hasOne("author", models.user, {
+                reverse: "answerComments",
+                required: true,
+                autoFetch: true
+            });
 
-            models.question_answer.hasOne("question", models.question);
-            models.question_comment.hasOne("question", models.question);
-            models.answer_comment.hasOne("answer", models.question_answer);
+            models.question_answer.hasOne("question", models.question, {
+                reverse: "answers",
+                required: true,
+                autoFetch: true
+            });
+            models.question_comment.hasOne("question", models.question, {
+                reverse: "comments",
+                required: true,
+                autoFetch: true
+            });
+            models.answer_comment.hasOne("answer", models.question_answer, {
+                reverse: "comments",
+                required: true,
+                autoFetch: true
+            });
 
             next();
         }
