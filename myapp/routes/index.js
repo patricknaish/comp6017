@@ -35,7 +35,6 @@ answer_listing = {
             }
         });
     },
-    "head": function(req, res) {}
 };
 
 answer_comment_listing = {
@@ -54,7 +53,6 @@ answer_comment = {
 
 question_answer = {
     "get": function(req, res) {},
-    "head": function(req, res) {},
     "post": function(req, res) {},
     "put": function(req, res) {},
     "delete": function(req, res) {},
