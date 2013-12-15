@@ -47,12 +47,6 @@ app.get("/question/:qid/answer/:aid/comment", routes.question.answer.comment.lis
 app.get("/question/:qid/comment", routes.question.comment.listing.get);
 app.get("/question/:qid/comment/:cid", routes.question.comment.get);
 
-app.head("/", routes.index.head);
-app.head("/question", routes.question.listing.head);
-app.head("/question/:qid", routes.question.head);
-app.head("/question/:qid/answer/:aid/comment/:cid", routes.question.answer.comment.head);
-app.head("/question/:qid/answer/:aid/comment", routes.question.answer.comment.listing.head);
-
 app.post("/question", routes.question.post);
 app.post("/question/:qid/answer", routes.question.answer.post);
 app.post("/question/:qid/answer/:aid/comment", routes.question.answer.comment.post);
