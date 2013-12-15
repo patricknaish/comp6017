@@ -91,7 +91,7 @@ question_answer = {
                     res.json({"error": err});
                     return;
                 }
-                
+
                 res.json(answer);
             });
         });
@@ -116,16 +116,76 @@ question_answer = {
 };
 
 question_comment_listing = {
-    "get": function(req, res) {},
-    "head": function(req, res) {}
+    "get": function(req, res) {
+        req.models.question_comment.find({
+            "question_id": req.params.qid
+        }, function(err, comments) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            res.json(comments);
+        });
+    }
 };
 
 question_comment = {
-    "get": function(req, res) {},
-    "head": function(req, res) {},
-    "post": function(req, res) {},
-    "put": function(req, res) {},
-    "delete": function(req, res) {},
+    "get": function(req, res) {
+        req.models.question_comment.get(req.params.cid, function(err, comment) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            res.json(comment);
+        })
+    },
+    "post": function(req, res) {
+        req.models.question_comment.create([
+            {
+                "comment": req.body.comment,
+                "author_id": req.body.author_id,
+                "created": new Date(),
+                "question_id": req.params.qid
+            }
+        ], function(err, comment) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            res.json(comment);
+        })
+    },
+    "put": function(req, res) {
+        req.models.question_comment.get(req.params.cid, function(err, comment) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            if(req.body.comment) { comment.comment = req.body.comment; }
+            comment.updated = new Date();
+            comment.save(function(err) {
+                if(err) {
+                    res.json({"error": err});
+                    return;
+                }
+                res.json(comment);
+            });
+        });
+    },
+    "delete": function(req, res) {
+        req.models.question_comment.get(req.params.cid, function(err, comment) {
+            if(err) {
+                res.json({"error": err});
+                return;
+            }
+            comment.remove(function(err) {
+                if(err) {
+                    res.json({"error": err});
+                    return;
+                }
+                res.json({"status": "removed"});
+            });
+        });},
     "listing": question_comment_listing
 };
 
@@ -151,7 +211,7 @@ question_listing = {
                 res.statusCode = 500;
                 res.end(error);
             }
-        });  
+        });
     },
     "head": function(req, res) {
         res.setHeader('Content-Type', 'application/json');
@@ -193,7 +253,7 @@ exports.question = {
             author_id: req.body.author_id,
             created: new Date()
         }], function(err, items) {
-            if(!err) { 
+            if(!err) {
                 var body = {
                     created: items[0].render()
                 };
