@@ -18,7 +18,23 @@ exports.index = {
 };
 
 answer_listing = {
-    "get": function(req, res) {},
+    "get": function(req, res) {
+        req.models.question_answer.find({question_id: req.params.qid}, function(err, question) {
+            if(!err) {
+                body = JSON.stringify(question);
+                res.setHeader('Content-Type', 'application/json');
+                res.statusCode = 200;
+                res.send(body);
+            } else {
+                var error = JSON.stringify({
+                    "error": "No question found with id "+req.params.qid
+                });
+                res.setHeader('Content-Type', 'application.json');
+                res.statusCode = 404;
+                res.end(error);
+            }
+        });
+    },
     "head": function(req, res) {}
 };
 
