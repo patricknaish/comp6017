@@ -1,4 +1,4 @@
-
+/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent: 4, es5: true*/
 /**
  * Module dependencies.
  */
@@ -32,8 +32,8 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+if ('development' === app.get('env')) {
+    app.use(express.errorHandler());
 }
 
 
@@ -62,6 +62,6 @@ app.delete("/question/:qid/answer/:aid", routes.question.answer.delete);
 app.delete("/question/:qid/answer/:aid/comment/:cid", routes.question.answer.comment.delete);
 app.delete("/question/:qid/comment/:cid", routes.question.comment.delete);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
 });
