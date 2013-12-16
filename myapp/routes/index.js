@@ -113,12 +113,14 @@ var answer_comment = {
                 res.json({"error": err});
                 return;
             }
-            comment.remove(function (err) {
-                if (err) {
-                    res.json({"error": err});
-                    return;
-                }
-                res.json({"status": "removed"});
+            comment.removeChildren(function() {
+                comment.remove(function (err) {
+                    if (err) {
+                        res.json({"error": err});
+                        return;
+                    }
+                    res.json({"status": "removed"});
+                });
             });
         });
     },
@@ -352,13 +354,15 @@ exports.question = {
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
-            question.remove(function (err) {
-                if (err) {
-                    res.statusCode = 500;
-                    res.json({"error": err});
-                    return;
-                }
-                res.json({"status": "removed"});
+            question.removeChildren(function() {
+                question.remove(function (err) {
+                    if (err) {
+                        res.statusCode = 500;
+                        res.json({"error": err});
+                        return;
+                    }
+                    res.json({"status": "removed"});
+                });
             });
         });
     },

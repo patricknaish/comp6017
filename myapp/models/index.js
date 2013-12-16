@@ -26,6 +26,14 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    removeChildren: function(next) {
+                        this.getComments(function(err, comments) {
+                            for(comment = 0; comment < comments.length; comment++) {
+                                comments[comment].remove(function(err) {});
+                            }
+                            next();
+                        });
+                    },
                     render: function () {
                         return {
                             id: this.id,
@@ -64,6 +72,14 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    removeChildren: function(next) {
+                        this.getComments(function(err, comments) {
+                            for(comment = 0; comment < comments.length; comment++) {
+                                comments[comment].remove(function(err) {});
+                            }
+                            next();
+                        });
+                    },
                     render: function () {
                         return {
                             id: this.id,
