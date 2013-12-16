@@ -57,4 +57,23 @@ echo "\nGET /user/1"
 tput sgr0
 curl -s http://localhost:3000/user/1 | python -mjson.tool
 
+tput setaf 2
+echo "\nTest cascading deletes"
+tput setaf 3
+echo Creating question...
+curl -sX POST -d "title=Test+Question&question=This+is+a+test&author_id=1" http://localhost:3000/question > /dev/null
+echo Adding first comment...
+curl -sX POST -d "comment=This+is+a+test+comment&author_id=2" http://localhost:3000/question/1/comment > /dev/null
+echo Adding second comment...
+curl -sX POST -d "comment=This+is+another+test+comment&author_id=2" http://localhost:3000/question/1/comment > /dev/null
+echo Listing comments...
+tput sgr0
+curl -s http://localhost:3000/question/1/comment | python -mjson.tool
+tput setaf 3
+echo Deleting question...
+curl -sX DELETE http://localhost:3000/question/1 > /dev/null
+echo Listing comments...
+tput sgr0
+curl -s http://localhost:3000/question/1/comment | python -mjson.tool
+
 killall node
