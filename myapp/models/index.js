@@ -31,8 +31,19 @@ exports.define = function (app) {
                             for(comment = 0; comment < comments.length; comment++) {
                                 comments[comment].remove(function(err) {});
                             }
-                            next();
+                            
                         });
+                        this.getAnswers(function(err, answers) {
+                            console.log("Answers " + answers.length);
+                            for(answer = 0; answer < answers.length; answer++) {
+                                my_answer = answers[answer];
+                                my_answer.removeChildren(function() {
+                                    console.log(my_answer);
+                                    my_answer.remove(function(err) {});
+                                });
+                            }
+                        })
+                        next();
                     },
                     render: function () {
                         return {
