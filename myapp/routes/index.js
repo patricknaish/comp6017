@@ -5,7 +5,10 @@
  */
 exports.index = {
     "get": function (req, res) {
-        res.json({"questions": "/questions"});
+        res.json({
+            "questions": "/question",
+            "users": "/user"
+        });
     }
 };
 
