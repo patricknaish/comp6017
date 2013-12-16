@@ -183,13 +183,15 @@ var question_answer = {
                 res.json({"error": "No answer found for " + req.params.aid});
                 return;
             }
-            answer.remove(function (err) {
-                if (err) {
-                    res.statusCode = 500;
-                    res.json({"error": err});
-                    return;
-                }
-                res.json({"status": "removed"});//todo do this right
+            answer.removeChildren(function() {
+                answer.remove(function (err) {
+                    if (err) {
+                        res.statusCode = 500;
+                        res.json({"error": err});
+                        return;
+                    }
+                    res.json({"status": "removed"});//todo do this right
+                });
             });
         });
     },
