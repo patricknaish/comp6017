@@ -58,7 +58,7 @@ tput sgr0
 curl -s http://localhost:3000/user/1 | python -mjson.tool
 
 tput setaf 2
-echo "\nTest cascading deletes on questions"
+echo "\nTest cascading deletes on question comments"
 tput setaf 3
 echo Creating question...
 curl -sX POST -d "title=Test+Question&question=This+is+a+test&author_id=1" http://localhost:3000/question > /dev/null
@@ -77,16 +77,16 @@ tput sgr0
 curl -s http://localhost:3000/question/1/comment | python -mjson.tool
 
 tput setaf 2
-echo "\nTest cascading deletes on answers"
+echo "\nTest cascading deletes on answer comments"
 tput setaf 3
 echo Creating question...
 curl -sX POST -d "title=Test+Question&question=This+is+a+test&author_id=1" http://localhost:3000/question > /dev/null
 echo Creating answer...
-curl -sX POST -d "answer=This+is+a+test+answer&author_id=2" http://localhost:3000/question/1/answer > /dev/null
+curl -sX POST -d "answer=This+is+a+test+answer&author_id=2" http://localhost:3000/question/2/answer > /dev/null
 echo Adding first comment...
-curl -sX POST -d "comment=This+is+a+test+comment&author_id=1" http://localhost:3000/question/1/answer/1/comment > /dev/null
+curl -sX POST -d "comment=This+is+a+test+comment&author_id=1" http://localhost:3000/question/2/answer/1/comment > /dev/null
 echo Adding second comment...
-curl -sX POST -d "comment=This+is+another+test+comment&author_id=1" http://localhost:3000/question/1/answer/1/comment > /dev/null
+curl -sX POST -d "comment=This+is+another+test+comment&author_id=1" http://localhost:3000/question/2/answer/1/comment > /dev/null
 echo Listing comments...
 tput sgr0
 curl -s http://localhost:3000/question/1/answer/1/comment | python -mjson.tool
@@ -96,5 +96,25 @@ curl -sX DELETE http://localhost:3000/question/1/answer/1 > /dev/null
 echo Listing comments...
 tput sgr0
 curl -s http://localhost:3000/question/1/answer/1/comment | python -mjson.tool
+
+tput setaf 2
+echo "\nTest cascading deletes on question answers"
+tput setaf 3
+echo Creating question...
+curl -sX POST -d "title=Test+Question&question=This+is+a+test&author_id=1" http://localhost:3000/question > /dev/null
+echo Creating first answer...
+curl -sX POST -d "answer=This+is+a+test+answer&author_id=2" http://localhost:3000/question/3/answer > /dev/null
+echo Creating second answer...
+curl -sX POST -d "answer=This+is+another+test+answer&author_id=2" http://localhost:3000/question/3/answer > /dev/null
+echo Listing answers...
+tput sgr0
+curl -s http://localhost:3000/question/3/answer | python -mjson.tool
+tput setaf 3
+echo Deleting question...
+curl -sX DELETE http://localhost:3000/question/3 > /dev/null
+echo Listing answers...
+tput sgr0
+curl -s http://localhost:3000/question/3/answer | python -mjson.tool
+
 
 killall node
