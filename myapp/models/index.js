@@ -26,23 +26,24 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
-                    removeChildren: function(next) {
-                        this.getComments(function(err, comments) {
-                            for(comment = 0; comment < comments.length; comment++) {
-                                comments[comment].remove(function(err) {});
+                    removeChildren: function (next) {
+                        this.getComments(function (err, comments) {
+                            var comment;
+                            for (comment = 0; comment < comments.length; comment++) {
+                                comments[comment].remove();
                             }
-                            
                         });
-                        this.getAnswers(function(err, answers) {
-                            console.log("Answers " + answers.length);
-                            for(answer = 0; answer < answers.length; answer++) {
+                        this.getAnswers(function (err, answers) {
+                            var answer, my_answer;
+                            var removed = function (removedAnswer) {
+                                console.log(removedAnswer);
+                                removedAnswer.remove();
+                            };
+                            for (answer = 0; answer < answers.length; answer++) {
                                 my_answer = answers[answer];
-                                my_answer.removeChildren(function() {
-                                    console.log(my_answer);
-                                    my_answer.remove(function(err) {});
-                                });
+                                my_answer.removeChildren(removed(my_answer));
                             }
-                        })
+                        });
                         next();
                     },
                     render: function () {
@@ -83,12 +84,15 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
-                    removeChildren: function(next) {
-                        this.getComments(function(err, comments) {
-                            for(comment = 0; comment < comments.length; comment++) {
-                                comments[comment].remove(function(err) {});
+                    removeChildren: function (next) {
+                        this.getComments(function (err, comments) {
+                            var comment;
+                            for (comment = 0; comment < comments.length; comment++) {
+                                comments[comment].remove();
                             }
-                            next();
+                            if (next) {
+                                next();
+                            }
                         });
                     },
                     render: function () {

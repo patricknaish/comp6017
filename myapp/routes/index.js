@@ -113,7 +113,7 @@ var answer_comment = {
                 res.json({"error": err});
                 return;
             }
-            comment.removeChildren(function() {
+            comment.removeChildren(function () {
                 comment.remove(function (err) {
                     if (err) {
                         res.json({"error": err});
@@ -183,7 +183,7 @@ var question_answer = {
                 res.json({"error": "No answer found for " + req.params.aid});
                 return;
             }
-            answer.removeChildren(function() {
+            answer.removeChildren(function () {
                 answer.remove(function (err) {
                     if (err) {
                         res.statusCode = 500;
@@ -356,7 +356,7 @@ exports.question = {
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
-            question.removeChildren(function() {
+            question.removeChildren(function () {
                 question.remove(function (err) {
                     if (err) {
                         res.statusCode = 500;
