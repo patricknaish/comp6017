@@ -16,6 +16,7 @@ sleep 2
 
 echo "Running tests..."
 
+# Run Mocha tests
 $mocha -R spec
 
 killall node

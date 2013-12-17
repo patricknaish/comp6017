@@ -1,14 +1,9 @@
 /*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true*/
 
-var CREATED = 201;
-var DELETED = 204;
-var BAD_REQUEST = 400;
-var NOT_FOUND = 404;
-var SERVICE_UNAVAILABLE = 503;
+/* Status code constants */
+var CREATED = 201, DELETED = 204, BAD_REQUEST = 400, NOT_FOUND = 404, SERVICE_UNAVAILABLE = 503;
 
-/*
- * GET home page.
- */
+/* Home page */
 exports.index = {
     "get": function (req, res) {
         res.json({
@@ -21,14 +16,17 @@ exports.index = {
     }
 };
 
+/* List answers on a question */
 var answer_listing = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Find all answers with the specified question_id */
             req.models.question_answer.find({question_id: req.params.qid}, function (err, answers) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
@@ -45,23 +43,25 @@ var answer_listing = {
     }
 };
 
+/* List comments on an answer */
 var answer_comment_listing = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
-                req.models.answer_comment.find({
-                    "answer_id": req.params.aid
-                }, function (err, comments) {
+                /* Find all comments with the specified answer_id */
+                req.models.answer_comment.find({answer_id: req.params.aid}, function (err, comments) {
                     if (err) {
                         res.statusCode = NOT_FOUND;
                         res.json({"error": "No comments found for answer " + req.params.aid});
@@ -78,20 +78,24 @@ var answer_comment_listing = {
     }
 };
 
+/* Interact with comments on an answer */
 var answer_comment = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
+                /* Get the comment with the specified id */
                 req.models.answer_comment.get(req.params.cid, function (err, comment) {
                     if (err) {
                         res.statusCode = NOT_FOUND;
@@ -104,18 +108,21 @@ var answer_comment = {
         });
     },
     "post": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
+                /* Create the comment with the specified options */
                 req.models.answer_comment.create([
                     {
                         "comment": req.body.comment,
@@ -125,6 +132,7 @@ var answer_comment = {
                     }
                 ], function (err, items) {
                     if (err) {
+                        /* Notify the user if they are missing fields */
                         if (err.msg === "required") {
                             res.statusCode = BAD_REQUEST;
                             res.json({"error": "Required field " + err.property + " was not supplied"});
@@ -154,18 +162,21 @@ var answer_comment = {
         });
     },
     "put": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
+                /* Check the comment exists */
                 req.models.answer_comment.get(req.params.cid, function (err, comment) {
                     if (err) {
                         res.statusCode = NOT_FOUND;
@@ -174,6 +185,7 @@ var answer_comment = {
                     }
                     if (req.body.comment) { comment.comment = req.body.comment; }
                     comment.updated = new Date();
+                    /* Update the comment */
                     comment.save(function (err) {
                         if (err) {
                             res.statusCode = SERVICE_UNAVAILABLE;
@@ -187,24 +199,28 @@ var answer_comment = {
         });
     },
     "delete": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
+                /* Check the comment exists */
                 req.models.answer_comment.get(req.params.cid, function (err, comment) {
                     if (err) {
                         res.statusCode = NOT_FOUND;
                         res.json({"error": "No comment found for  " + req.params.cid});
                         return;
                     }
+                    /* Delete the comment */
                     comment.removeChildren(function () {
                         comment.remove(function (err) {
                             if (err) {
@@ -223,14 +239,17 @@ var answer_comment = {
     "listing": answer_comment_listing
 };
 
+/* Interact with answers on a question */
 var question_answer = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Get the answer with the specified id */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
@@ -242,12 +261,14 @@ var question_answer = {
         });
     },
     "post": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Create the answer with the specified options */
             req.models.question_answer.create([
                 {
                     "answer" : req.body.answer,
@@ -257,6 +278,7 @@ var question_answer = {
                 }
             ], function (err, items) {
                 if (err) {
+                    /* Notify the user if they are missing fields */
                     if (err.msg === "required") {
                         res.statusCode = BAD_REQUEST;
                         res.json({"error": "Required field " + err.property + " was not supplied"});
@@ -273,12 +295,14 @@ var question_answer = {
         });
     },
     "put": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
@@ -288,6 +312,7 @@ var question_answer = {
                 if (req.body.answer) { answer.answer = req.body.answer; }
                 if (req.body.author_id) { answer.author_id = req.body.author_id; }
                 answer.updated = new Date();
+                /* Update the answer */
                 answer.save(function (err) {
                     if (err) {
                         res.statusCode = SERVICE_UNAVAILABLE;
@@ -300,18 +325,21 @@ var question_answer = {
         });
     },
     "delete": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the answer exists */
             req.models.question_answer.get(req.params.aid, function (err, answer) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No answer found for " + req.params.aid});
                     return;
                 }
+                /* Delete the answer and its comments */
                 answer.removeChildren(function () {
                     answer.remove(function (err) {
                         if (err) {
@@ -329,17 +357,18 @@ var question_answer = {
     "comment": answer_comment
 };
 
+/* List comments on a question */
 var question_comment_listing = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
-            req.models.question_comment.find({
-                "question_id": req.params.qid
-            }, function (err, comments) {
+            /* Find all comments with the specified question_id */
+            req.models.question_comment.find({question_id: req.params.qid}, function (err, comments) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No comments found for question " + req.params.qid});
@@ -355,14 +384,17 @@ var question_comment_listing = {
     }
 };
 
+/* Interact with comments on a question */
 var question_comment = {
     "get": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Get the comment with the specified id */
             req.models.question_comment.get(req.params.cid, function (err, comment) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
@@ -374,12 +406,14 @@ var question_comment = {
         });
     },
     "post": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Create the comment with the specified options */
             req.models.question_comment.create([
                 {
                     "comment": req.body.comment,
@@ -389,6 +423,7 @@ var question_comment = {
                 }
             ], function (err, items) {
                 if (err) {
+                    /* Notify the user if they are missing fields */
                     if (err.msg === "required") {
                         res.statusCode = BAD_REQUEST;
                         res.json({"error": "Required field " + err.property + " was not supplied"});
@@ -405,12 +440,14 @@ var question_comment = {
         });
     },
     "put": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the comment exists */
             req.models.question_comment.get(req.params.cid, function (err, comment) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
@@ -419,6 +456,7 @@ var question_comment = {
                 }
                 if (req.body.comment) { comment.comment = req.body.comment; }
                 comment.updated = new Date();
+                /* Update the comment */
                 comment.save(function (err) {
                     if (err) {
                         res.statusCode = SERVICE_UNAVAILABLE;
@@ -431,18 +469,21 @@ var question_comment = {
         });
     },
     "delete": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Check the comment exists */
             req.models.question_comment.get(req.params.cid, function (err, comment) {
                 if (err) {
                     res.statusCode = NOT_FOUND;
                     res.json({"error": "No comment found for " + req.params.cid});
                     return;
                 }
+                /* Delete the comment */
                 comment.remove(function (err) {
                     if (err) {
                         res.statusCode = SERVICE_UNAVAILABLE;
@@ -458,8 +499,10 @@ var question_comment = {
     "listing": question_comment_listing
 };
 
+/* List questions */
 var question_listing = {
     "get": function (req, res) {
+        /* Find all questions */
         req.models.question.find({}, function (err, questions) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -475,8 +518,10 @@ var question_listing = {
     }
 };
 
+/* Interact with a question */
 exports.question = {
     "get": function (req, res) {
+        /* Get the question with the specified id */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -487,6 +532,7 @@ exports.question = {
         });
     },
     "post": function (req, res) {
+        /* Create the question with the specified options */
         req.models.question.create([
             {
                 "title": req.body.title,
@@ -497,6 +543,7 @@ exports.question = {
         ], function (err, items) {
             if (err) {
                 if (err.msg === "required") {
+                    /* Notify the user if they are missing fields */
                     res.statusCode = BAD_REQUEST;
                     res.json({"error": "Required field " + err.property + " was not supplied"});
                     return;
@@ -511,6 +558,7 @@ exports.question = {
         });
     },
     "put": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -520,6 +568,7 @@ exports.question = {
             if (req.body.question) { question.question = req.body.question; }
             if (req.body.title) { question.title = req.body.title; }
             question.updated = new Date();
+            /* Update the question */
             question.save(function (err) {
                 if (err) {
                     res.statusCode = SERVICE_UNAVAILABLE;
@@ -531,12 +580,14 @@ exports.question = {
         });
     },
     "delete": function (req, res) {
+        /* Check the question exists */
         req.models.question.get(req.params.qid, function (err, question) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No question found for " + req.params.qid});
                 return;
             }
+            /* Delete the question and its comments */
             question.removeChildren(function () {
                 question.remove(function (err) {
                     if (err) {
@@ -555,8 +606,10 @@ exports.question = {
     "comment": question_comment
 };
 
+/* List users */
 var user_listing = {
     "get": function (req, res) {
+        /* Find all users */
         req.models.user.find({}, function (err, users) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -572,8 +625,10 @@ var user_listing = {
     }
 };
 
+/* Interact with a user */
 exports.user = {
     "get": function (req, res) {
+        /* Get the user with the specified id */
         req.models.user.get(req.params.uid, function (err, user) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -584,6 +639,7 @@ exports.user = {
         });
     },
     "post": function (req, res) {
+        /* Create the comment with the specified options */
         req.models.user.create([
             {
                 "name": req.body.name,
@@ -591,6 +647,7 @@ exports.user = {
             }
         ], function (err, items) {
             if (err) {
+                /* Notify the user if they are missing fields */
                 if (err.msg === "required") {
                     res.statusCode = BAD_REQUEST;
                     res.json({"error": "Required field " + err.property + " was not supplied"});
@@ -606,6 +663,7 @@ exports.user = {
         });
     },
     "put": function (req, res) {
+        /* Check the user exists */
         req.models.user.get(req.params.uid, function (err, user) {
             if (err) {
                 res.statusCode = NOT_FOUND;
@@ -614,6 +672,7 @@ exports.user = {
             }
             if (req.body.name) { user.name = req.body.name; }
             user.updated = new Date();
+            /* Update the user */
             user.save(function (err) {
                 if (err) {
                     res.statusCode = SERVICE_UNAVAILABLE;
@@ -625,20 +684,24 @@ exports.user = {
         });
     },
     "delete": function (req, res) {
+        /* Check the user exists */
         req.models.user.get(req.params.uid, function (err, user) {
             if (err) {
                 res.statusCode = NOT_FOUND;
                 res.json({"error": "No user found for " + req.params.uid});
                 return;
             }
-            user.remove(function (err) {
-                if (err) {
-                    res.statusCode = SERVICE_UNAVAILABLE;
-                    res.json({"error": "Could not delete user " + req.params.uid});
-                    return;
-                }
-                res.statusCode = DELETED;
-                res.json({"status": "removed"});
+            /* Delete the user */
+            user.removeChildren(function () {
+                user.remove(function (err) {
+                    if (err) {
+                        res.statusCode = SERVICE_UNAVAILABLE;
+                        res.json({"error": "Could not delete user " + req.params.uid});
+                        return;
+                    }
+                    res.statusCode = DELETED;
+                    res.json({"status": "removed"});
+                });
             });
         });
     },

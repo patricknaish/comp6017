@@ -1,5 +1,4 @@
 /*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true*/
-
 var orm = require('orm');
 
 exports.define = function (app) {
@@ -30,7 +29,7 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
-                    /* Method to allow the removal of all comments on a question */
+                    /* Remove all comments on a question */
                     removeChildren: function (next) {
                         this.getComments(function (err, comments) {
                             var comment;
@@ -40,7 +39,6 @@ exports.define = function (app) {
                         });
                         this.getAnswers(function (err, answers) {
                             var answer, my_answer, removed = function (removedAnswer) {
-                                console.log(removedAnswer);
                                 removedAnswer.remove();
                             };
                             for (answer = 0; answer < answers.length; answer += 1) {
@@ -50,6 +48,7 @@ exports.define = function (app) {
                         });
                         next();
                     },
+                    /* Render the model's fields for sending to the user */
                     render: function () {
                         return {
                             id: this.id,
@@ -67,6 +66,7 @@ exports.define = function (app) {
                     }
                 }
             });
+            /* Define the answer table */
             models.question_answer = db.define("answer", {
                 answer: {
                     type: "text",
@@ -90,6 +90,7 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    /* Remove all comments on an answer */
                     removeChildren: function (next) {
                         this.getComments(function (err, comments) {
                             var comment;
@@ -101,6 +102,7 @@ exports.define = function (app) {
                             }
                         });
                     },
+                    /* Render the model's fields for sending to the user */
                     render: function () {
                         return {
                             id: this.id,
@@ -117,6 +119,7 @@ exports.define = function (app) {
                     }
                 }
             });
+            /* Define the question comments table */
             models.question_comment = db.define("question_comment", {
                 comment: {
                     type: "text",
@@ -140,6 +143,7 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    /* Render the model's fields for sending to the user */
                     render: function () {
                         return {
                             id: this.id,
@@ -155,6 +159,7 @@ exports.define = function (app) {
                     }
                 }
             });
+            /* Define the answer comment table */
             models.answer_comment = db.define("answer_comment", {
                 comment: {
                     type: "text",
@@ -178,6 +183,7 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    /* Render the model's fields for sending to the user */
                     render: function () {
                         return {
                             id: this.id,
@@ -193,6 +199,7 @@ exports.define = function (app) {
                     }
                 }
             });
+            /* Define the user table */
             models.user = db.define("user", {
                 name: {
                     type: "text",
@@ -208,6 +215,41 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    /* Remove all questions, answers and comments by a user */
+                    removeChildren: function (next) {
+                        this.getQuestions(function (err, questions) {
+                            var question, my_question, removed = function (removedquestion) {
+                                removedquestion.remove();
+                            };
+                            for (question = 0; question < questions.length; question += 1) {
+                                my_question = questions[question];
+                                my_question.removeChildren(removed(my_question));
+                            }
+                        });
+                        this.getAnswers(function (err, answers) {
+                            var answer, my_answer, removed = function (removedAnswer) {
+                                removedAnswer.remove();
+                            };
+                            for (answer = 0; answer < answers.length; answer += 1) {
+                                my_answer = answers[answer];
+                                my_answer.removeChildren(removed(my_answer));
+                            }
+                        });
+                        this.getQuestionComments(function (err, questionComments) {
+                            var questionComment;
+                            for (questionComment = 0; questionComment < questionComments.length; questionComment += 1) {
+                                questionComments[questionComment].remove();
+                            }
+                        });
+                        this.getAnswerComments(function (err, answerComments) {
+                            var answerComment;
+                            for (answerComment = 0; answerComment < answerComments.length; answerComment += 1) {
+                                answerComments[answerComment].remove();
+                            }
+                        });
+                        next();
+                    },
+                    /* Render the model's fields for sending to the user */
                     render: function () {
                         return {
                             id: this.id,
