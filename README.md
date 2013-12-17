@@ -88,7 +88,7 @@ __HEAD__ is supported by all URIs
 Example interactions
 --------------------
 
-__Creating a question___:
+__Creating a question__:
 
     Request:
 
