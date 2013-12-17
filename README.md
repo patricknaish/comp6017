@@ -41,7 +41,7 @@ Installation
 Architecture (API)
 ------------------
 
-_GET_:
+__GET__:
 
     - /                                         Get details on routes
     - /user                                     Get a list of users
@@ -56,7 +56,7 @@ _GET_:
     - /question/:qid/answer/:aid/comment/:cid   Get a specific answer comment's details
 
 
-_POST_:
+__POST__:
 
     - /user                                     Create a new user
     - /question                                 Create a new question
@@ -65,7 +65,7 @@ _POST_:
     - /question/:qid/answer/:aid/comment        Create a new comment on an answer
 
 
-_PUT_:
+__PUT__:
 
     - /user                                     Update a user
     - /question                                 Update a question
@@ -74,7 +74,7 @@ _PUT_:
     - /question/:qid/answer/:aid/comment        Update a comment on an answer
 
 
-_DELETE_:
+__DELETE__:
 
     - /user                                     Delete a user
     - /question                                 Delete a question
@@ -82,4 +82,4 @@ _DELETE_:
     - /question/:qid/answer                     Delete an answer on a question
     - /question/:qid/answer/:aid/comment        Delete a comment on an answer
 
-_HEAD_ is supported by all URIs
+__HEAD__ is supported by all URIs
