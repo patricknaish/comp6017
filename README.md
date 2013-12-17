@@ -20,8 +20,6 @@ Installation
 * Run:
 
         npm install
-        or
-        sudo npm install
 
 * To run the application:
 
@@ -87,6 +85,30 @@ __HEAD__ is supported by all URIs
 
 Example interactions
 --------------------
+
+__Creating a user__:
+
+    Request:
+
+        POST /user HTTP/1.1
+        Host: localhost:3000
+        name=Test+User
+
+    Response:
+
+        HTTP/1.1 201 Created
+        Location: /user/1
+
+        {
+            "id": 1,
+            "name": "Test User",
+            "created": "2013-12-17T07:29:26.103Z",
+            "updated": null,
+            "links": {
+                "self": "/user/1"
+            }
+        }
+
 
 __Creating a question__:
 
