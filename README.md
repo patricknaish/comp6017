@@ -82,7 +82,92 @@ __DELETE__:
 
 __HEAD__ is supported by all URIs
 
+JSON Structure
+--------------
 
+__Question__:
+    JSON Object with Fields:
+     - id                                       Unique identifier for Question
+     - title                                    Title of the question
+     - created                                  Timestamp of object creation
+     - updated                                  null if not updated, timestamp of update if one has occurred
+     - links                                    Links section
+
+    Links Section:
+     - author                                   Link to author
+     - self                                     Link to question
+     - comments                                 Link to comment list
+     - answers                                  Link to answer list
+
+__Question Listing__:
+    A JSON array of question objects
+
+__Question Comment__:
+    JSON Object with Fields:
+     - id                                       Unique identifier for Comment
+     - comment                                  Text of the comment
+     - created                                  Timestamp of object creation
+     - updated                                  null if not updated, timestamp of update if one has occurred
+     - links                                    Links section
+
+    Links Section:
+     - author                                   Link to author
+     - question                                 Link to the parent question
+     - self                                     Link to the comment
+
+__Question Comment Listing__:
+    JSON array of Question Comment
+     
+__Answer__:
+    JSON Object with Fields:
+     - id                                       Unique identifier for Answer
+     - answer                                   Text of the answer
+     - created                                  Timestamp of object creation
+     - updated                                  null if not updated, timestamp of update if one has occurred
+     - links                                    Links section
+
+    Links Section:
+     - author                                   Link to author
+     - question                                 Link to the parent question
+     - self                                     Link to the answer
+     - comments                                 Link to answer comment list
+
+__Answer Listing__:
+    A JSON array of question objects
+
+__Answer Comment__:
+    JSON Object with Fields:
+     - id                                       Unique identifier for Comment
+     - comment                                  Text of the comment
+     - created                                  Timestamp of object creation
+     - updated                                  null if not updated, timestamp of update if one has occurred
+     - links                                    Links section
+
+    Links Section:
+     - author                                   Link to author
+     - answer                                   Link to the parent answer
+     - self                                     Link to the comment
+
+__Answer Comment Listing__:
+    JSON array of Answer Comment
+
+__User__:
+    JSON Object with Fields:
+     - id                                       Unique identifier for User
+     - name                                     Non-unique name
+     - created                                  Timestamp of object creation
+     - updated                                  null if not updated, timestamp of update if one has occurred
+     - links                                    Links section
+
+    Links Section:
+     - self                                     Link to the user
+
+__User Listing__:
+    JSON array of User
+
+__Error__:
+    JSON object with a single field, error, which holds error details.
+    
 Example interactions
 --------------------
 
@@ -136,3 +221,50 @@ __Creating a question__:
                 "answers": "/question/1/answer"
             }
         }
+
+__Creating a question comment__:
+    Request:
+
+        POST /question/<question_id>/comment HTTP/1.1
+        Host: localhost:3000
+        comment=Test+Question&author_id=1
+
+    Response:
+
+        HTTP/1.1 201 Created
+        Location: /question/<question_id>/comment/1
+
+        {
+            "id": 1,
+            "comment": "Test Comment",
+            "created": "2013-12-17T09:55:44.248Z",
+            "updated": null,
+            "links": {
+                    "author": "/user/1",
+                    "question": "/question/<question_id>",
+                    "self": "/question/<question_id>/comment/1"
+                    }
+        }
+__Creating an answer comment__:
+    Request:
+
+        POST /question/<question_id>/answer/<answer_id>/comment HTTP/1.1
+        Host: localhost:3000
+        comment=Test+Question&author_id=1
+
+    Response:
+
+        HTTP/1.1 201 Created
+        Location: /question/<question_id>/answer/<answer_id>/comment/1
+
+        {
+            "id": 1,
+            "comment": "Test Comment",
+            "created": "2013-12-17T09:55:44.248Z",
+            "updated": null,
+            "links": {
+                    "author": "/user/1",
+                    "answer": "/question/<question_id>/answer/<answer_id>",
+                    "self": "/question/<question_id>/answer/<answer_id>/comment/1"
+                    }
+        }        
