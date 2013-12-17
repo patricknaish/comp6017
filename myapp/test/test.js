@@ -1,4 +1,4 @@
-/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent:4, es5: true*/
+/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent:4*/
 /*global describe, it*/
 var assert = require("assert");
 var request = require("request");

@@ -1,8 +1,12 @@
-/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent: 4, es5: true*/
+/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true*/
+
 var orm = require('orm');
+
 exports.define = function (app) {
+    /* Connect to the database */
     app.use(orm.express("sqlite://database.db", {
         define: function (db, models, next) {
+            /* Define the question table */
             models.question = db.define("question", {
                 title: {
                     type: "text",
@@ -26,20 +30,20 @@ exports.define = function (app) {
                 }
             }, {
                 methods: {
+                    /* Method to allow the removal of all comments on a question */
                     removeChildren: function (next) {
                         this.getComments(function (err, comments) {
                             var comment;
-                            for (comment = 0; comment < comments.length; comment++) {
+                            for (comment = 0; comment < comments.length; comment += 1) {
                                 comments[comment].remove();
                             }
                         });
                         this.getAnswers(function (err, answers) {
-                            var answer, my_answer;
-                            var removed = function (removedAnswer) {
+                            var answer, my_answer, removed = function (removedAnswer) {
                                 console.log(removedAnswer);
                                 removedAnswer.remove();
                             };
-                            for (answer = 0; answer < answers.length; answer++) {
+                            for (answer = 0; answer < answers.length; answer += 1) {
                                 my_answer = answers[answer];
                                 my_answer.removeChildren(removed(my_answer));
                             }
@@ -89,7 +93,7 @@ exports.define = function (app) {
                     removeChildren: function (next) {
                         this.getComments(function (err, comments) {
                             var comment;
-                            for (comment = 0; comment < comments.length; comment++) {
+                            for (comment = 0; comment < comments.length; comment += 1) {
                                 comments[comment].remove();
                             }
                             if (next) {

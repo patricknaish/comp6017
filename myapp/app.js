@@ -1,4 +1,4 @@
-/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent: 4, es5: true*/
+/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, es5: true*/
 /**
  * Module dependencies.
  */

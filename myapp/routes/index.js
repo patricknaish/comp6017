@@ -1,4 +1,4 @@
-/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true, indent:4, es5: true*/
+/*jslint node: true, devel: true, sloppy:true, unparam: true, nomen: true*/
 
 var CREATED = 201;
 var DELETED = 204;
@@ -35,9 +35,8 @@ var answer_listing = {
                     res.json({"error": "No answers found for question " + req.params.qid});
                     return;
                 }
-                var body = [];
-                var i;
-                for (i = 0; i < answers.length; i++) {
+                var body = [], i;
+                for (i = 0; i < answers.length; i += 1) {
                     body.push(answers[i].render());
                 }
                 res.json(body);
@@ -68,9 +67,8 @@ var answer_comment_listing = {
                         res.json({"error": "No comments found for answer " + req.params.aid});
                         return;
                     }
-                    var body = [];
-                    var i;
-                    for (i = 0; i < comments.length; i++) {
+                    var body = [], i;
+                    for (i = 0; i < comments.length; i += 1) {
                         body.push(comments[i].render());
                     }
                     res.json(body);
@@ -347,9 +345,8 @@ var question_comment_listing = {
                     res.json({"error": "No comments found for question " + req.params.qid});
                     return;
                 }
-                var body = [];
-                var i;
-                for (i = 0; i < comments.length; i++) {
+                var body = [], i;
+                for (i = 0; i < comments.length; i += 1) {
                     body.push(comments[i].render());
                 }
                 res.json(body);
@@ -469,9 +466,8 @@ var question_listing = {
                 res.json({"error": "No questions found"});
                 return;
             }
-            var body = [];
-            var i;
-            for (i = 0; i < questions.length; i++) {
+            var body = [], i;
+            for (i = 0; i < questions.length; i += 1) {
                 body.push(questions[i].render());
             }
             res.json(body);
@@ -567,9 +563,8 @@ var user_listing = {
                 res.json({"error": "No users found"});
                 return;
             }
-            var body = [];
-            var i;
-            for (i = 0; i < users.length; i++) {
+            var body = [], i;
+            for (i = 0; i < users.length; i += 1) {
                 body.push(users[i].render());
             }
             res.json(body);
