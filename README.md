@@ -83,3 +83,34 @@ __DELETE__:
     - /question/:qid/answer/:aid/comment        Delete a comment on an answer
 
 __HEAD__ is supported by all URIs
+
+
+Example interactions
+--------------------
+
+__Creating a question___:
+
+    Request:
+
+        POST /question HTTP/1.1
+        Host: localhost:3000
+        title=Test+Title&question=Test+Question&author_id=1
+
+    Response:
+
+        HTTP/1.1 201 Created
+        Location: /question/1
+
+        {
+            "id": 1,
+            "title": "Test Title",
+            "question": "Test Question",
+            "created": "2013-12-17T07:17:33.282Z",
+            "updated": null,
+            "links": {
+                "author": "/user/1",
+                "self": "/question/1",
+                "comments": "/question/1/comment",
+                "answers": "/question/1/answer"
+            }
+        }
