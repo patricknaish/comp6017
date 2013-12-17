@@ -86,6 +86,7 @@ JSON Structure
 --------------
 
 __Question__:
+
     JSON Object with Fields:
      - id                                       Unique identifier for Question
      - title                                    Title of the question
@@ -100,9 +101,11 @@ __Question__:
      - answers                                  Link to answer list
 
 __Question Listing__:
+
     A JSON array of question objects
 
 __Question Comment__:
+
     JSON Object with Fields:
      - id                                       Unique identifier for Comment
      - comment                                  Text of the comment
@@ -116,9 +119,11 @@ __Question Comment__:
      - self                                     Link to the comment
 
 __Question Comment Listing__:
+
     JSON array of Question Comment
      
 __Answer__:
+
     JSON Object with Fields:
      - id                                       Unique identifier for Answer
      - answer                                   Text of the answer
@@ -133,9 +138,11 @@ __Answer__:
      - comments                                 Link to answer comment list
 
 __Answer Listing__:
+
     A JSON array of question objects
 
 __Answer Comment__:
+
     JSON Object with Fields:
      - id                                       Unique identifier for Comment
      - comment                                  Text of the comment
@@ -149,9 +156,11 @@ __Answer Comment__:
      - self                                     Link to the comment
 
 __Answer Comment Listing__:
+
     JSON array of Answer Comment
 
 __User__:
+
     JSON Object with Fields:
      - id                                       Unique identifier for User
      - name                                     Non-unique name
@@ -163,9 +172,11 @@ __User__:
      - self                                     Link to the user
 
 __User Listing__:
+
     JSON array of User
 
 __Error__:
+
     JSON object with a single field, error, which holds error details.
     
 Example interactions
