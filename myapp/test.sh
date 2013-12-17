@@ -89,13 +89,13 @@ echo Adding second comment...
 curl -sX POST -d "comment=This+is+another+test+comment&author_id=1" http://localhost:3000/question/2/answer/1/comment > /dev/null
 echo Listing comments...
 tput sgr0
-curl -s http://localhost:3000/question/1/answer/1/comment | python -mjson.tool
+curl -s http://localhost:3000/question/2/answer/1/comment | python -mjson.tool
 tput setaf 3
 echo Deleting answer...
-curl -sX DELETE http://localhost:3000/question/1/answer/1 > /dev/null
+curl -sX DELETE http://localhost:3000/question/2/answer/1 > /dev/null
 echo Listing comments...
 tput sgr0
-curl -s http://localhost:3000/question/1/answer/1/comment | python -mjson.tool
+curl -s http://localhost:3000/question/2/answer/1/comment | python -mjson.tool
 
 tput setaf 2
 echo "\nTest cascading deletes on question answers"

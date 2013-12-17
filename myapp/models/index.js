@@ -53,10 +53,12 @@ exports.define = function (app) {
                             question: this.question,
                             created: this.created,
                             updated: this.updated,
-                            author: "/user/" + this.author_id,
-                            href: "/question/" + this.id,
-                            comments: "/question/" + this.id + "/comment",
-                            answers: "/question/" + this.id + "/answer"
+                            links: {
+                                author: "/user/" + this.author_id,
+                                self: "/question/" + this.id,
+                                comments: "/question/" + this.id + "/comment",
+                                answers: "/question/" + this.id + "/answer"
+                            }
                         };
                     }
                 }
@@ -101,10 +103,12 @@ exports.define = function (app) {
                             answer: this.answer,
                             created: this.created,
                             updated: this.updated,
-                            author: "/user/" + this.author_id,
-                            question: "/question/" + this.question_id,
-                            href: "/question/" + this.question_id + "/answer/" + this.id,
-                            comments: "/question/" + this.question_id + "/answer/" + this.id + "/comment"
+                            links: {
+                                author: "/user/" + this.author_id,
+                                question: "/question/" + this.question_id,
+                                self: "/question/" + this.question_id + "/answer/" + this.id,
+                                comments: "/question/" + this.question_id + "/answer/" + this.id + "/comment"
+                            }
                         };
                     }
                 }
@@ -138,9 +142,11 @@ exports.define = function (app) {
                             comment: this.comment,
                             created: this.created,
                             updated: this.updated,
-                            author: "/user/" + this.author_id,
-                            question: "/question/" + this.question_id,
-                            href: "/question/" + this.question_id + "/comment/" + this.id
+                            links: {
+                                author: "/user/" + this.author_id,
+                                question: "/question/" + this.question_id,
+                                self: "/question/" + this.question_id + "/comment/" + this.id
+                            }
                         };
                     }
                 }
@@ -174,9 +180,11 @@ exports.define = function (app) {
                             comment: this.comment,
                             created: this.created,
                             updated: this.updated,
-                            author: "/user/" + this.author_id,
-                            answer: "/question/" + this.answer.question_id + "/answer/" + this.answer_id,
-                            href: "/question/" + this.answer.question_id + "/answer/" + this.answer_id + "/comment/" + this.id
+                            links: {
+                                author: "/user/" + this.author_id,
+                                answer: "/question/" + this.answer.question_id + "/answer/" + this.answer_id,
+                                self: "/question/" + this.answer.question_id + "/answer/" + this.answer_id + "/comment/" + this.id
+                            }
                         };
                     }
                 }
@@ -202,7 +210,9 @@ exports.define = function (app) {
                             name: this.name,
                             created: this.created,
                             updated: this.updated,
-                            href: "/user/" + this.id
+                            links: {
+                                self: "/user/" + this.id
+                            }
                         };
                     }
                 }
