@@ -233,13 +233,39 @@ __Creating a question__:
             }
         }
 
+__Creating an answer__:
+
+    Request:
+
+        POST /question/<question_id>/answer/ HTTP/1.1
+        Host: localhost:3000
+        answer=Test+Answer&author_id=1
+
+    Response:
+
+        HTTP/1.1 201 Created
+        Location: /question/<question_id>/answer/1
+
+        {
+            "id": 1,
+            "comment": "Test Answer",
+            "created": "2013-12-17T09:55:44.248Z",
+            "updated": null,
+            "links": {
+                    "author": "/user/1",
+                    "question": "/question/<question_id>",
+                    "self": "/question/<question_id>/answer/1",
+                    "comments": "/question/<question_id>/answer/<answer_id>/comment"
+                    }
+        }        
+
 __Creating a question comment__:
 
     Request:
 
         POST /question/<question_id>/comment HTTP/1.1
         Host: localhost:3000
-        comment=Test+Question&author_id=1
+        comment=Test+Comment&author_id=1
 
     Response:
 
@@ -263,7 +289,7 @@ __Creating an answer comment__:
 
         POST /question/<question_id>/answer/<answer_id>/comment HTTP/1.1
         Host: localhost:3000
-        comment=Test+Question&author_id=1
+        comment=Test+Comment&author_id=1
 
     Response:
 
