@@ -221,16 +221,14 @@ var answer_comment = {
                         return;
                     }
                     /* Delete the comment */
-                    comment.removeChildren(function () {
-                        comment.remove(function (err) {
-                            if (err) {
-                                res.statusCode = SERVICE_UNAVAILABLE;
-                                res.json({"error": "Could not delete comment " + req.params.cid});
-                                return;
-                            }
-                            res.statusCode = DELETED;
-                            res.json({"status": "removed"});
-                        });
+                    comment.remove(function (err) {
+                        if (err) {
+                            res.statusCode = SERVICE_UNAVAILABLE;
+                            res.json({"error": "Could not delete comment " + req.params.cid});
+                            return;
+                        }
+                        res.statusCode = DELETED;
+                        res.json({"status": "removed"});
                     });
                 });
             });
@@ -347,6 +345,7 @@ var question_answer = {
                             res.json({"error": "Could not delete answer " + req.params.aid});
                             return;
                         }
+                        res.statusCode = DELETED;
                         res.json({"status": "removed"});
                     });
                 });
