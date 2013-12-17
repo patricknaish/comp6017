@@ -31,34 +31,34 @@ Installation
 
 Architecture (API)
 ------------------
-*_GET_:
-    - /                                         Get details on routes
-    - /user                                     Get a list of users
-    - /user/:uid                                Get a specific user's details
-    - /question                                 Get a list of questions
-    - /question/:qid                            Get a specific question's details
-    - /question/:qid/comment                    Get a list of comments on a question
-    - /question/:qid/comment/:cid               Get a specific question comment's details
-    - /question/:qid/answer                     Get a list of answers on a question
-    - /question/:qid/answer/:aid                Get a specific answer's details
-    - /question/:qid/answer/:aid/comment        Get a list of comments on an answer
-    - /question/:qid/answer/:aid/comment/:cid   Get a specific answer comment's details
-*_POST_:
-    - /user                                     Create a new user
-    - /question                                 Create a new question
-    - /question/:qid/comment                    Create a new comment on a question
-    - /question/:qid/answer                     Create a new answer on a question
-    - /question/:qid/answer/:aid/comment        Create a new comment on an answer
-*_PUT_:
-    - /user                                     Update a user
-    - /question                                 Update a question
-    - /question/:qid/comment                    Update a comment on a question
-    - /question/:qid/answer                     Update an answer on a question
-    - /question/:qid/answer/:aid/comment        Update a comment on an answer
-*_DELETE_:
-    - /user                                     Delete a user
-    - /question                                 Delete a question
-    - /question/:qid/comment                    Delete a comment on a question
-    - /question/:qid/answer                     Delete an answer on a question
-    - /question/:qid/answer/:aid/comment        Delete a comment on an answer
-*_HEAD_ is supported by all URIs
+*GET:
+ - /                                         Get details on routes
+ - /user                                     Get a list of users
+ - /user/:uid                                Get a specific user's details
+ - /question                                 Get a list of questions
+ - /question/:qid                            Get a specific question's details
+ - /question/:qid/comment                    Get a list of comments on a question
+ - /question/:qid/comment/:cid               Get a specific question comment's details
+ - /question/:qid/answer                     Get a list of answers on a question
+ - /question/:qid/answer/:aid                Get a specific answer's details
+ - /question/:qid/answer/:aid/comment        Get a list of comments on an answer
+ - /question/:qid/answer/:aid/comment/:cid   Get a specific answer comment's details
+*POST:
+ - /user                                     Create a new user
+ - /question                                 Create a new question
+ - /question/:qid/comment                    Create a new comment on a question
+ - /question/:qid/answer                     Create a new answer on a question
+ - /question/:qid/answer/:aid/comment        Create a new comment on an answer
+*PUT:
+ - /user                                     Update a user
+ - /question                                 Update a question
+ - /question/:qid/comment                    Update a comment on a question
+ - /question/:qid/answer                     Update an answer on a question
+ - /question/:qid/answer/:aid/comment        Update a comment on an answer
+*DELETE:
+ - /user                                     Delete a user
+ - /question                                 Delete a question
+ - /question/:qid/comment                    Delete a comment on a question
+ - /question/:qid/answer                     Delete an answer on a question
+ - /question/:qid/answer/:aid/comment        Delete a comment on an answer
+*HEAD is supported by all URIs
