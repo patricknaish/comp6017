@@ -40,7 +40,8 @@ Installation
 
 Architecture (API)
 ------------------
-*GET:
+
+_GET_:
 
     - /                                         Get details on routes
     - /user                                     Get a list of users
@@ -54,7 +55,8 @@ Architecture (API)
     - /question/:qid/answer/:aid/comment        Get a list of comments on an answer
     - /question/:qid/answer/:aid/comment/:cid   Get a specific answer comment's details
 
-*POST:
+
+_POST_:
 
     - /user                                     Create a new user
     - /question                                 Create a new question
@@ -62,7 +64,8 @@ Architecture (API)
     - /question/:qid/answer                     Create a new answer on a question
     - /question/:qid/answer/:aid/comment        Create a new comment on an answer
 
-*PUT:
+
+_PUT_:
 
     - /user                                     Update a user
     - /question                                 Update a question
@@ -70,12 +73,13 @@ Architecture (API)
     - /question/:qid/answer                     Update an answer on a question
     - /question/:qid/answer/:aid/comment        Update a comment on an answer
 
-*DELETE:
+
+_DELETE_:
 
     - /user                                     Delete a user
     - /question                                 Delete a question
     - /question/:qid/comment                    Delete a comment on a question
     - /question/:qid/answer                     Delete an answer on a question
     - /question/:qid/answer/:aid/comment        Delete a comment on an answer
-    
-*HEAD is supported by all URIs
+
+_HEAD_ is supported by all URIs
