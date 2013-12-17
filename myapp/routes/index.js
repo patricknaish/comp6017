@@ -12,8 +12,11 @@ var SERVICE_UNAVAILABLE = 503;
 exports.index = {
     "get": function (req, res) {
         res.json({
-            "questions": "/question",
-            "users": "/user"
+            "links": {
+                "questions": "/question",
+                "users": "/user",
+                "self": "/"
+            }
         });
     }
 };

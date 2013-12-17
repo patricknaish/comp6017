@@ -10,6 +10,8 @@
     "jade": "*",
     "orm": "*",
     "sqlite3": "*",
-    "db-migrate": "*"
+    "db-migrate": "*",
+    "request": "*",
+    "mocha": "*"
   }
 }
