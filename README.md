@@ -234,6 +234,7 @@ __Creating a question__:
         }
 
 __Creating a question comment__:
+
     Request:
 
         POST /question/<question_id>/comment HTTP/1.1
@@ -257,6 +258,7 @@ __Creating a question comment__:
                     }
         }
 __Creating an answer comment__:
+
     Request:
 
         POST /question/<question_id>/answer/<answer_id>/comment HTTP/1.1
