@@ -1,7 +1,9 @@
 #!/bin/sh
 
-tput setaf 3
 dbmigrate=./node_modules/db-migrate/bin/db-migrate
+mocha=./node_modules/mocha/bin/mocha
+
+tput setaf 3
 echo "Cleaning database..."
 rm -f database.db
 echo "Checking for packages..."
@@ -14,6 +16,6 @@ sleep 2
 
 echo "Running tests..."
 
-mocha -R spec
+$mocha -R spec
 
 killall node
