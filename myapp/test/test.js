@@ -149,7 +149,7 @@ describe("Users", function () {
                 });
             });
         });
-        it("should update a retrievable user", function (done) {
+        it("should delete a user", function (done) {
             request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
                 body = JSON.parse(body);
                 var questionId = body.id;
@@ -323,7 +323,7 @@ describe("Questions", function () {
                 });
             });
         });
-        it("should update a retrievable question", function (done) {
+        it("should delete a question", function (done) {
             request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
                 body = JSON.parse(body);
                 var userId = body.id;
@@ -334,6 +334,249 @@ describe("Questions", function () {
                         request.get("http://localhost:3000/question/" + questionId, function (error, response, body) {
                             assert.equal(404, response.statusCode);
                             done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
+describe("Answers", function () {
+    describe("Listing", function () {
+        it("should not return an error", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.get("http://localhost:3000/question/" + questionId + "/answer", function (error, response, body) {
+                        assert.ifError(error);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should have HTTP status 200", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.get("http://localhost:3000/question/" + questionId + "/answer", function (error, response, body) {
+                        assert.equal(200, response.statusCode);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should return an empty array without answers", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.get({url: "http://localhost:3000/question/" + questionId + "/answer", json: true}, function (error, response, body) {
+                        assert.deepEqual([], body);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should return a populated array with answers", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        request.get({url: "http://localhost:3000/question/" + questionId + "/answer", json: true}, function (error, response, body) {
+                            assert.equal(1, body.length);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+    describe("Creation", function () {
+        it("should not return an error", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        assert.ifError(error);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should have HTTP status 201", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        assert.equal(201, response.statusCode);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should return a Location header", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        assert(response.headers.location);
+                        done();
+                    });
+                });
+            });
+        });
+        it("should create a retrievable answer", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.get("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                            body = JSON.parse(body);
+                            assert.equal("Test Answer", body.answer);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+    describe("Updating", function () {
+        it("should not return an error", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.put("http://localhost:3000/question/" + questionId + "/answer/" + answerId, {form: {"author_id": userId, "answer": "Test Answer 2"}}, function (error, response, body) {
+                            assert.ifError(error);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        it("should have HTTP status 200", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.put("http://localhost:3000/question/" + questionId + "/answer/" + answerId, {form: {"author_id": userId, "answer": "Test Answer 2"}}, function (error, response, body) {
+                            assert.equal(200, response.statusCode);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        it("should update a retrievable answer", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.put("http://localhost:3000/question/" + questionId + "/answer/" + answerId, {form: {"author_id": userId, "answer": "Test Answer 2"}}, function (error, response, body) {
+                            request.get("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                                body = JSON.parse(body);
+                                assert.equal("Test Answer 2", body.answer);
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+    describe("Deleting", function () {
+        it("should not return an error", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.del("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                            assert.ifError(error);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        it("should have HTTP status 204", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.del("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                            assert.equal(204, response.statusCode);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        it("should delete an answer", function (done) {
+            request.post("http://localhost:3000/user", {form: {"name": "TestUser"}}, function (error, response, body) {
+                body = JSON.parse(body);
+                var userId = body.id;
+                request.post("http://localhost:3000/question", {form: {"author_id": userId, "title": "Test Title", "question": "Test Question"}}, function (error, response, body) {
+                    body = JSON.parse(body);
+                    var questionId = body.id;
+                    request.post("http://localhost:3000/question/" + questionId + "/answer", {form: {"author_id": userId, "answer": "Test Answer"}}, function (error, response, body) {
+                        body = JSON.parse(body);
+                        var answerId = body.id;
+                        request.del("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                            request.get("http://localhost:3000/question/" + questionId + "/answer/" + answerId, function (error, response, body) {
+                                assert.equal(404, response.statusCode);
+                                done();
+                            });
                         });
                     });
                 });
